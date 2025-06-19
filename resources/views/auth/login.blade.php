@@ -32,8 +32,8 @@
                 <div class="row wow fadeInUp" data-wow-duration="1s">
                     <div class="col-xxl-5 col-xl-6 col-md-9 col-lg-7 m-auto">
                         <div class="fp__login_area">
-                            <h2>Welcome back!</h2>
-                            <p>sign in to continue</p>
+                            <h2>Selamat Datang Kembali!</h2>
+                            <p>Masuk untuk melanjutkan</p>
                             <form action="{{ route('login') }}" method="POST">
                                 @csrf
                                 <div class="row">
@@ -57,10 +57,10 @@
                                                 <input class="form-check-input" type="checkbox" value=""
                                                     id="flexCheckDefault" name="remember">
                                                 <label class="form-check-label" for="flexCheckDefault">
-                                                    Remeber Me
+                                                    Ingat Saya
                                                 </label>
                                             </div>
-                                            <a href="{{ route('password.request') }}">Forgot Password ?</a>
+                                            <a href="{{ route('password.request') }}">Lupa Password ?</a>
                                         </div>
                                     </div>
 
@@ -73,7 +73,7 @@
                             </form>
                             <p class="or"><span>or</span></p>
 
-                            <p class="create_account">Dont’t have an aceount ? <a href="{{ route('register') }}">Create Account</a>
+                            <p class="create_account">Belum memiliki akun ? <a href="{{ route('register') }}">Buat akun</a>
                             </p>
                         </div>
                     </div>

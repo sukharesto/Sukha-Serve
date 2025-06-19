@@ -48,13 +48,13 @@
                                     <strong>Payment Method:</strong><br>
                                     {{ $order->payment_method }}<br>
                                     <strong>Payment Status: </strong>
-                                        @if(strtoupper($order->payment_status) == 'COMPLETED')
-                                            <span class="badge badge-success">COMPLETED</span>
-                                        @elseif(strtoupper($order->payment_status) == 'PENDING')
-                                            <span class="badge badge-warning">PENDING</span>
-                                        @else
-                                            <span class="badge badge-danger">{{ $order->payment_status }}</span>
-                                        @endif
+                                    @if(strtoupper($order->payment_status) == 'COMPLETED')
+                                        <span class="badge badge-success">COMPLETED</span>
+                                    @elseif(strtoupper($order->payment_status) == 'PENDING')
+                                        <span class="badge badge-warning">PENDING</span>
+                                    @else
+                                        <span class="badge badge-danger">{{ $order->payment_status }}</span>
+                                    @endif
                                 </address>
                             </div>
                             <div class="col-md-6 text-md-right">
@@ -67,7 +67,7 @@
                                     @else
                                         <span class="badge badge-warning">{{ $order->order_status }}</span>
                                     @endif
-                                        <br><br>
+                                    <br><br>
                                 </address>
                             </div>
                         </div>
@@ -90,31 +90,70 @@
                                 </tr>
                                 @foreach ($order->orderItems as $orderItem)
                                 @php
-                                    $size = json_decode($orderItem->product_size);
-                                    $options = json_decode($orderItem->product_option);
+                                    // Decode JSON into associative arrays
+                                    $sizeData = json_decode($orderItem->product_size, true);
+                                    $options = json_decode($orderItem->product_option, true);
 
                                     $qty = $orderItem->qty;
-                                    $untiPrice = $orderItem->unit_price;
-                                    $sizePrice = $size->price;
-                                    $optionPrice = 0;
-                                    foreach ($options as $optionItem) {
-                                        $optionPrice += $optionItem->price;
+                                    $unitPrice = $orderItem->unit_price;
+
+                                    $sizePrice = 0;
+                                    $sizeName = '';
+
+                                    // Handle product_size. It could be an array of objects or a single object.
+                                    if (is_array($sizeData)) {
+                                        // If it's an array and has at least one element (e.g., [{"name": "Large", "price": 5000}])
+                                        if (!empty($sizeData) && isset($sizeData[0])) {
+                                            $actualSize = $sizeData[0];
+                                            if (isset($actualSize['price'])) {
+                                                $sizePrice = $actualSize['price'];
+                                            }
+                                            if (isset($actualSize['name'])) {
+                                                $sizeName = $actualSize['name'];
+                                            }
+                                        }
+                                        // If it's an associative array (e.g., {"name": "Large", "price": 5000})
+                                        // This case is covered if $sizeData is directly the associative array and not an array of arrays
+                                        // but the previous check for $sizeData[0] handles the common array-in-array case
+                                        else if (isset($sizeData['price'])) {
+                                            $sizePrice = $sizeData['price'];
+                                            $sizeName = $sizeData['name'];
+                                        }
                                     }
 
-                                    $productTotal = ($untiPrice + $sizePrice + $optionPrice) * $qty;
+                                    $optionPrice = 0;
+                                    // Ensure $options is an array and iterate through it
+                                    if (is_array($options)) {
+                                        foreach ($options as $optionItem) {
+                                            // Check if optionItem is an array and has a price key
+                                            if (is_array($optionItem) && isset($optionItem['price'])) {
+                                                $optionPrice += $optionItem['price'];
+                                            }
+                                        }
+                                    }
+
+                                    $productTotal = ($unitPrice + $sizePrice + $optionPrice) * $qty;
                                 @endphp
                                 <tr>
                                     <td>{{ ++$loop->index }}</td>
                                     <td>{{ $orderItem->product_name }}</td>
                                     <td>
-                                        <b>{{ @$size->name }} ({{ currencyPosition(@$size->price) }})</b>
-                                        <br>
+                                        @if($sizeName)
+                                            <b>{{ $sizeName }} ({{ currencyPosition($sizePrice) }})</b>
+                                            <br>
+                                        @endif
                                         options:
                                         <br>
-                                        @foreach ($options as $option)
-                                        {{ @$option->name }} ({{ currencyPosition(@$option->price) }})
-                                        <br>
-                                        @endforeach
+                                        @if (is_array($options) && !empty($options))
+                                            @foreach ($options as $option)
+                                                @if(isset($option['name']) && isset($option['price']))
+                                                    {{ @$option['name'] }} ({{ currencyPosition(@$option['price']) }})
+                                                    <br>
+                                                @endif
+                                            @endforeach
+                                        @else
+                                            N/A
+                                        @endif
                                     </td>
 
                                     <td class="text-center">{{ currencyPosition($orderItem->unit_price) }}</td>

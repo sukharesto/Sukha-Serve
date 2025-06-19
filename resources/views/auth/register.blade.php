@@ -8,10 +8,10 @@
         <div class="fp__breadcrumb_overlay">
             <div class="container">
                 <div class="fp__breadcrumb_text">
-                    <h1>sign up</h1>
+                    <h1>Register</h1>
                     <ul>
                         <li><a href="{{ url('/') }}">home</a></li>
-                        <li><a href="javascript:;">sign up</a></li>
+                        <li><a href="javascript:;">register</a></li>
                     </ul>
                 </div>
             </div>
@@ -31,14 +31,14 @@
                 <div class="row wow fadeInUp" data-wow-duration="1s">
                     <div class="col-xxl-5 col-xl-6 col-md-9 col-lg-7 m-auto">
                         <div class="fp__login_area">
-                            <h2>Welcome back!</h2>
-                            <p>sign up to continue</p>
+                            <h2>Selamat Datang Kembali!</h2>
+                            <p>daftar untuk melanjutkan</p>
                             <form method="POST" action="{{ route('register') }}">
                                 @csrf
                                 <div class="row">
                                     <div class="col-xl-12">
                                         <div class="fp__login_imput">
-                                            <label>name</label>
+                                            <label>nama</label>
                                             <input type="text" placeholder="Name" name="name" value="{{ old('name') }}">
                                         </div>
                                     </div>
@@ -59,7 +59,7 @@
                                     </div>
                                     <div class="col-xl-12">
                                         <div class="fp__login_imput">
-                                            <label>confirm password</label>
+                                            <label>konfirmasi password</label>
                                             <input type="password" name="password_confirmation" placeholder="Confirm Password">
                                         </div>
                                     </div>
@@ -74,7 +74,7 @@
                             </form>
                             <p class="or"><span>or</span></p>
 
-                            <p class="create_account">Dont’t have an aceount ? <a href="{{ route('login') }}">login</a></p>
+                            <p class="create_account">Sudah punya akun ? <a href="{{ route('login') }}">login</a></p>
                         </div>
                     </div>
                 </div>
